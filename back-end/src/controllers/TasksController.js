@@ -3,9 +3,9 @@ const TasksService = require('../services/TasksService');
 
 const create = async (req, res, next) => {
   const { tasks } = req.body;
-  const { userId, userRole } = req.user;
+  const { userId } = req.user;
   const tasksCreated = await TasksService.create(
-    { tasks, userId, userRole },
+    { tasks, userId },
   );
   if (tasksCreated.err) return next(tasksCreated.err);
   return res.status(StatusCodes.CREATED).json({ tasks: tasksCreated });
