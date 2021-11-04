@@ -1,12 +1,14 @@
 const Joi = require('joi');
 
-module.exports = (req, _res, next) => {
+const validateUsersPayload = (req, _res, next) => {
   const { error } = Joi.object({
-    climateHour: Joi.number().integer().min(0).max(23)
-      .required(),
-    climateRain: Joi.number().min(0).required(),
-    dateId: Joi.number().integer().min(1).required(),
+    email: Joi.string().email().required(),
+    password: Joi.string().required(),
+    role: Joi.string().valid('user', 'admin').required(),
+    name: Joi.string().required(),
   }).validate(req.body);
   if (error) return next(error);
   return next();
 };
+
+module.exports = validateUsersPayload;
