@@ -3,20 +3,21 @@ const express = require('express');
 const UsersController = require('../controllers/UsersController');
 const ErrorController = require('../controllers/ErrorController');
 const validateJWT = require('../auth/validateJWT');
-const validateUser = require('../validators/validateUser');
+const validateUserPayload = require('../validators/validateUserPayload');
+const validateLoginPayload = require('../validators/validateLoginPayload');
 
 const UsersRouter = express.Router();
 
-UsersRouter.post('/', rescue(validateUser), rescue(UsersController.create));
+UsersRouter.post('/', rescue(validateUserPayload), rescue(UsersController.create));
 
 UsersRouter.post(
   '/admin',
   rescue(validateJWT),
-  rescue(validateUser),
-  rescue(UsersController.create),
+  rescue(validateUserPayload),
+  rescue(UsersController.createAdmin),
 );
 
-UsersRouter.post('/login', rescue(validateUser), rescue(UsersController.create));
+UsersRouter.post('/login', rescue(validateLoginPayload), rescue(UsersController.login));
 
 UsersRouter.get('/', rescue(UsersController.getAll));
 

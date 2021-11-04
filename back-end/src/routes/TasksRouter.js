@@ -1,15 +1,27 @@
 const rescue = require('express-rescue');
 const express = require('express');
-const DistrictsController = require('../controllers/DistrictsController');
+const TasksController = require('../controllers/TasksController');
 const ErrorController = require('../controllers/ErrorController');
-const validateDistrictsData = require('../validators/districtsValidators');
+const validateJWT = require('../auth/validateJWT');
+const validateTasksPayload = require('../validators/validateTasksPayload');
 
-const districtsRouter = express.Router();
+const TasksRouter = express.Router();
 
-districtsRouter.post('/', rescue(validateDistrictsData), rescue(DistrictsController.create));
-districtsRouter.get('/', rescue(DistrictsController.getAll));
-districtsRouter.get('/:id', rescue(DistrictsController.getById));
+TasksRouter.post(
+  '/',
+  rescue(validateJWT),
+  rescue(validateTasksPayload),
+  rescue(TasksController.create),
+);
 
-districtsRouter.use(ErrorController);
+TasksRouter.get('/', rescue(validateJWT), rescue(TasksController.getAll));
 
-module.exports = districtsRouter;
+TasksRouter.get('/:id', rescue(validateJWT), rescue(TasksController.getById));
+
+TasksRouter.put('/:id', rescue(validateJWT), rescue(TasksController.update));
+
+TasksRouter.delete('/:id', rescue(validateJWT), rescue(TasksController.remove));
+
+TasksRouter.use(ErrorController);
+
+module.exports = TasksRouter;
