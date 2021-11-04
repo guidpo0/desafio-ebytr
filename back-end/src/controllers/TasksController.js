@@ -1,28 +1,45 @@
-const DistrictsService = require('../services/DistrictsService');
-const { OK_STATUS } = require('../helpers/HTTPCodes');
+const { StatusCodes } = require('http-status-codes');
+const TasksService = require('../services/TasksService');
 
 const create = async (req, res, next) => {
-  const { districtName, state } = req.body;
-  const { districtId, err } = await DistrictsService.create({ districtName, state });
-  if (err) return next(err);
-  return res.status(OK_STATUS).json({ districtId, districtName, state });
+  const { tasks } = req.body;
+  const { userId, userRole } = req.user;
+  const tasksCreated = await TasksService.create(
+    { tasks, userId, userRole },
+  );
+  if (tasksCreated.err) return next(tasksCreated.err);
+  return res.status(StatusCodes.CREATED).json({ tasks: tasksCreated });
 };
 
-const getAll = async (_req, res) => {
-  const districts = await DistrictsService.getAll();
-  return res.status(OK_STATUS).json({ districts });
+const getAll = async (req, res, next) => {
+  const { userRole } = req.user;
+  const tasks = await TasksService.getAll(userRole);
+  if (tasks.err) return next(tasks.err);
+  return res.status(StatusCodes.OK).json({ tasks });
 };
 
-const getById = async (req, res, next) => {
+const getAllByUser = async (req, res, next) => {
   const { id } = req.params;
-  const district = await DistrictsService.getById(id);
-  const { err } = district;
-  if (err) return next(err);
-  return res.status(OK_STATUS).json(district);
+  const { userId, userRole } = req.user;
+  const tasks = await TasksService.getAllByUser({ id, userId, userRole });
+  if (tasks.err) return next(tasks.err);
+  return res.status(StatusCodes.OK).json({ tasks });
+};
+
+const update = async (req, res, next) => {
+  const { id } = req.params;
+  const { tasks } = req.body;
+  const { userId, userRole } = req.user;
+  const tasksUpdated = await TasksService.update({
+    id, userId, userRole, tasks,
+  });
+  if (tasksUpdated.err) return next(tasksUpdated.err);
+  return res.status(StatusCodes.OK).json({ tasks: tasksUpdated });
 };
 
 module.exports = {
   create,
   getAll,
-  getById,
+  getAllByUser,
+  update,
 };

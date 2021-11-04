@@ -8,7 +8,7 @@ const validateTasksPayload = require('../validators/validateTasksPayload');
 const TasksRouter = express.Router();
 
 TasksRouter.post(
-  '/',
+  '/user/:id',
   rescue(validateJWT),
   rescue(validateTasksPayload),
   rescue(TasksController.create),
@@ -16,11 +16,9 @@ TasksRouter.post(
 
 TasksRouter.get('/', rescue(validateJWT), rescue(TasksController.getAll));
 
-TasksRouter.get('/:id', rescue(validateJWT), rescue(TasksController.getById));
+TasksRouter.get('/user/:id', rescue(validateJWT), rescue(TasksController.getAllByUser));
 
-TasksRouter.put('/:id', rescue(validateJWT), rescue(TasksController.update));
-
-TasksRouter.delete('/:id', rescue(validateJWT), rescue(TasksController.remove));
+TasksRouter.put('/user/:id', rescue(validateJWT), rescue(TasksController.update));
 
 TasksRouter.use(ErrorController);
 

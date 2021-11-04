@@ -31,8 +31,8 @@ const createAdmin = async (req, res, next) => {
 const login = async (req, res, next) => {
   const { email, password } = req.body;
   const token = await UsersService.login({ email, password });
-  if (token.err) return next(user.err);
-  return res.status(StatusCodes.CREATED).json({ token });
+  if (token.err) return next(token.err);
+  return res.status(StatusCodes.OK).json({ token });
 };
 
 const getAll = async (_req, res) => {

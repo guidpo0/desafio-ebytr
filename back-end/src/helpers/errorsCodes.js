@@ -17,11 +17,11 @@ module.exports = {
   //     message: 'User not found',
   //   },
   // },
-  // INTERNAL_SERVER_ERROR: {
-  //   err: {
-  //     code: 'internal_error',
-  //     message: 'Internal server error',
-  //   },
+  INTERNAL_SERVER_ERROR: {
+    err: {
+      code: 'internal_error',
+      message: 'Internal server error',
+    },
   // },
   // CAR_NOT_AVAILABLE_ERROR: {
   //   err: {
