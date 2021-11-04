@@ -1,15 +1,31 @@
 const rescue = require('express-rescue');
 const express = require('express');
-const DatesController = require('../controllers/DatesController');
+const UsersController = require('../controllers/UsersController');
 const ErrorController = require('../controllers/ErrorController');
-const validateDatesData = require('../validators/datesValidators');
+const validateJWT = require('../auth/validateJWT');
+const validateUser = require('../validators/validateUser');
 
-const datesRouter = express.Router();
+const UsersRouter = express.Router();
 
-datesRouter.post('/', rescue(validateDatesData), rescue(DatesController.create));
-datesRouter.get('/', rescue(DatesController.getAll));
-datesRouter.get('/:id', rescue(DatesController.getById));
+UsersRouter.post('/', rescue(validateUser), rescue(UsersController.create));
 
-datesRouter.use(ErrorController);
+UsersRouter.post(
+  '/admin',
+  rescue(validateJWT),
+  rescue(validateUser),
+  rescue(UsersController.create),
+);
 
-module.exports = datesRouter;
+UsersRouter.post('/login', rescue(validateUser), rescue(UsersController.create));
+
+UsersRouter.get('/', rescue(UsersController.getAll));
+
+UsersRouter.get('/:id', rescue(UsersController.getById));
+
+UsersRouter.put('/:id', rescue(validateJWT), rescue(UsersController.update));
+
+UsersRouter.delete('/:id', rescue(validateJWT), rescue(UsersController.remove));
+
+UsersRouter.use(ErrorController);
+
+module.exports = UsersRouter;
