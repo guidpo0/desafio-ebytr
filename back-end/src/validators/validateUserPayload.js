@@ -1,6 +1,6 @@
 const Joi = require('joi');
 
-const validateUsersPayload = (req, _res, next) => {
+const validateUserPayload = (req, _res, next) => {
   const { error } = Joi.object({
     email: Joi.string().email().required(),
     password: Joi.string().required(),
@@ -11,4 +11,4 @@ const validateUsersPayload = (req, _res, next) => {
   return next();
 };
 
-module.exports = validateUsersPayload;
+module.exports = validateUserPayload;

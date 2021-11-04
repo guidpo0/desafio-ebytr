@@ -1,32 +1,79 @@
-const ClimatesService = require('../services/ClimatesService');
-const { CREATED_STATUS, OK_STATUS } = require('../helpers/HTTPCodes');
+const { StatusCodes } = require('http-status-codes');
+const UsersService = require('../services/UsersService');
 
 const create = async (req, res, next) => {
-  const { climateHour, climateRain, dateId } = req.body;
-  const { climateId, err } = await ClimatesService.create(
-    { climateHour, climateRain, dateId },
+  const {
+    email, password, role, name,
+  } = req.body;
+  const user = await UsersService.create(
+    {
+      email, password, role, name,
+    },
   );
-  if (err) return next(err);
-  return res.status(CREATED_STATUS).json({
-    climateId, climateHour, climateRain, dateId,
-  });
+  if (user.err) return next(user.err);
+  return res.status(StatusCodes.CREATED).json(user);
+};
+
+const createAdmin = async (req, res, next) => {
+  const {
+    email, password, role, name,
+  } = req.body;
+  const { userRole } = req.user;
+  const user = await UsersService.createAdmin(
+    {
+      email, password, role, name, userRole,
+    },
+  );
+  if (user.err) return next(user.err);
+  return res.status(StatusCodes.CREATED).json(user);
+};
+
+const login = async (req, res, next) => {
+  const { email, password } = req.body;
+  const token = await UsersService.login({ email, password });
+  if (token.err) return next(user.err);
+  return res.status(StatusCodes.CREATED).json({ token });
 };
 
 const getAll = async (_req, res) => {
-  const climates = await ClimatesService.getAll();
-  return res.status(OK_STATUS).json({ climates });
+  const users = await UsersService.getAll();
+  return res.status(StatusCodes.OK).json({ users });
 };
 
 const getById = async (req, res, next) => {
   const { id } = req.params;
-  const climate = await ClimatesService.getById(id);
-  const { err } = climate;
-  if (err) return next(err);
-  return res.status(OK_STATUS).json(climate);
+  const user = await UsersService.getById(id);
+  if (user.err) return next(user.err);
+  return res.status(StatusCodes.OK).json(user);
+};
+
+const update = async (req, res, next) => {
+  const { id } = req.params;
+  const {
+    email, password, role, name,
+  } = req.body;
+  const { userId, userRole } = req.user;
+  const userUpdated = await UsersService.update({
+    id, email, password, role, name, userId, userRole,
+  });
+  if (userUpdated.err) return next(userUpdated.err);
+  return res.status(StatusCodes.OK).json(userUpdated);
+};
+
+const remove = async (req, res, next) => {
+  const { id } = req.params;
+  const { userId, userRole } = req.user;
+  const userRemoved = await UsersService.remove({ id, userId, userRole });
+  if (userRemoved.err) return next(userRemoved.err);
+  return res.status(StatusCodes.OK).json(userRemoved);
 };
 
 module.exports = {
   create,
+  createAdmin,
+  login,
   getAll,
   getById,
+  update,
+  remove,
 };

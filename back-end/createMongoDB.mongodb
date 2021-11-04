@@ -7,30 +7,30 @@ db.createCollection(collection);
 
 db.users.insertMany([
   {
-    email: 'joao@teste.com',
-    password: 'joaoteste',
-    role: 'admin',
-    name: 'Joao',
+    userEmail: 'joao@teste.com',
+    userPassword: 'joaoteste',
+    userRole: 'admin',
+    userName: 'Joao',
     tasks: [
       {
-        description: 'Fazer x.',
-        status: 'pendente',
+        taskDescription: 'Fazer x.',
+        taskStatus: 'pendente',
       },
       {
-        description: 'Fazer x.',
-        status: 'em andamento',
+        taskDescription: 'Fazer x.',
+        taskStatus: 'em andamento',
       },
     ],
   },
   {
-    email: 'joana@teste.com',
-    password: 'joanateste',
-    role: 'user',
-    name: 'Joana',
+    userEmail: 'joana@teste.com',
+    userPassword: 'joanateste',
+    userRole: 'user',
+    userName: 'Joana',
     tasks: [
       {
-        description: 'Fazer y.',
-        status: 'pronto',
+        taskDescription: 'Fazer y.',
+        taskStatus: 'pronto',
       },
     ],
   },
