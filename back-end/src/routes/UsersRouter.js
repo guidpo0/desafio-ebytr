@@ -19,9 +19,9 @@ UsersRouter.post(
 
 UsersRouter.post('/login', rescue(validateLoginPayload), rescue(UsersController.login));
 
-UsersRouter.get('/', rescue(UsersController.getAll));
+UsersRouter.get('/', rescue(validateJWT), rescue(UsersController.getAll));
 
-UsersRouter.get('/:id', rescue(UsersController.getById));
+UsersRouter.get('/:id', rescue(validateJWT), rescue(UsersController.getById));
 
 UsersRouter.put('/:id', rescue(validateJWT), rescue(UsersController.update));
 

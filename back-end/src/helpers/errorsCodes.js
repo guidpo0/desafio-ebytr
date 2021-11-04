@@ -1,40 +1,40 @@
 module.exports = {
-  // CAR_NOT_FOUND_ERROR: {
-  //   err: {
-  //     code: 'not_found',
-  //     message: 'Car not found',
-  //   },
-  // },
-  // RENT_NOT_FOUND_ERROR: {
-  //   err: {
-  //     code: 'not_found',
-  //     message: 'Rent not found',
-  //   },
-  // },
-  // USER_NOT_FOUND_ERROR: {
-  //   err: {
-  //     code: 'not_found',
-  //     message: 'User not found',
-  //   },
-  // },
+  INVALID_EMAIL_ERROR: {
+    err: {
+      code: 'invalid_email',
+      message: 'Email already in use',
+    },
+  },
+  USER_NOT_ADMIN_ERROR: {
+    err: {
+      code: 'user_not_admin',
+      message: 'User logged is not a admin',
+    },
+  },
+  EMAIL_NOT_FOUND_ERROR: {
+    err: {
+      code: 'email_not_found',
+      message: 'Email not found',
+    },
+  },
   INTERNAL_SERVER_ERROR: {
     err: {
       code: 'internal_error',
       message: 'Internal server error',
     },
-  // },
-  // CAR_NOT_AVAILABLE_ERROR: {
-  //   err: {
-  //     code: 'car_not_available',
-  //     message: 'Car not available',
-  //   },
-  // },
-  // RENT_END_DATE_ERROR: {
-  //   err: {
-  //     code: 'rent_date_invalid',
-  //     message: 'Rental end date cannot be less than now',
-  //   },
-  // },
+  },
+  INCORRECT_PASSWORD_ERROR: {
+    err: {
+      code: 'password_incorrect',
+      message: 'Password incorrect',
+    },
+  },
+  USER_NOT_FOUND_ERROR: {
+    err: {
+      code: 'user_not_found',
+      message: 'User not found',
+    },
+  },
   // RENT_START_DATE_ERROR: {
   //   err: {
   //     code: 'rent_date_invalid',

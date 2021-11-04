@@ -2,26 +2,20 @@ const { StatusCodes } = require('http-status-codes');
 const UsersService = require('../services/UsersService');
 
 const create = async (req, res, next) => {
-  const {
-    email, password, role, name,
-  } = req.body;
+  const { userEmail, userPassword, userName } = req.body;
   const user = await UsersService.create(
-    {
-      email, password, role, name,
-    },
+    { userEmail, userPassword, userName },
   );
   if (user.err) return next(user.err);
   return res.status(StatusCodes.CREATED).json(user);
 };
 
 const createAdmin = async (req, res, next) => {
-  const {
-    email, password, role, name,
-  } = req.body;
+  const { userEmail, userPassword, userName } = req.body;
   const { userRole } = req.user;
   const user = await UsersService.createAdmin(
     {
-      email, password, role, name, userRole,
+      userEmail, userPassword, userName, userRole,
     },
   );
   if (user.err) return next(user.err);
@@ -29,8 +23,8 @@ const createAdmin = async (req, res, next) => {
 };
 
 const login = async (req, res, next) => {
-  const { email, password } = req.body;
-  const token = await UsersService.login({ email, password });
+  const { userEmail, userPassword } = req.body;
+  const token = await UsersService.login({ userEmail, userPassword });
   if (token.err) return next(token.err);
   return res.status(StatusCodes.OK).json({ token });
 };
@@ -50,11 +44,11 @@ const getById = async (req, res, next) => {
 const update = async (req, res, next) => {
   const { id } = req.params;
   const {
-    email, password, role, name,
+    userEmail, userPassword, userName,
   } = req.body;
   const { userId, userRole } = req.user;
   const userUpdated = await UsersService.update({
-    id, email, password, role, name, userId, userRole,
+    id, userEmail, userPassword, userName, userId, userRole,
   });
   if (userUpdated.err) return next(userUpdated.err);
   return res.status(StatusCodes.OK).json(userUpdated);
