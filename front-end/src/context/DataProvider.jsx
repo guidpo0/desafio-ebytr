@@ -10,7 +10,7 @@ function DataProvider({ children }) {
     { url: '', name: 'Login' },
   ]);
   const [userTasks, setUserTasks] = useState([
-    { taskDescription: '', taskStatus: '' },
+    { taskDescription: 'Nenhuma', taskStatus: 'em andamento' },
   ]);
   const [climates, setClimates] = useState([{
     climateId: 1, climateHour: 0, climateRain: 0, dateId: 0,
@@ -19,7 +19,8 @@ function DataProvider({ children }) {
   useEffect(() => {
     if (isAuthenticated()) {
       setLinks([
-        { url: 'minhas-tarefas', name: 'Minhas Tarefas' },
+        { url: '/minhas-tarefas', name: 'Minhas Tarefas' },
+        { url: '/', name: 'Sair' },
       ]);
     }
   }, []);
@@ -29,8 +30,9 @@ function DataProvider({ children }) {
       const token = localStorage.getItem('token');
       const { data: { userId } } = jwtDecode(token);
       tasksServices.getTasksByUser(userId)
-        .then((response) => {
-          setUserTasks(response.data);
+        .then((tasks) => {
+          const tasksResponse = tasks || [{ taskDescription: 'Nenhuma', taskStatus: 'em andamento' }];
+          setUserTasks(tasksResponse);
         });
     }
   }, [links]);
@@ -39,6 +41,7 @@ function DataProvider({ children }) {
     links,
     setLinks,
     userTasks,
+    setUserTasks,
     climates,
     setClimates,
   };

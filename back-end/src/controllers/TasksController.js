@@ -28,10 +28,6 @@ const update = async (req, res, next) => {
 };
 
 module.exports = {
-<<<<<<< HEAD
-  create,
-=======
->>>>>>> 3f631fde5c00f7188e2502869be96463e59e8584
   getAll,
   getAllByUser,
   update,

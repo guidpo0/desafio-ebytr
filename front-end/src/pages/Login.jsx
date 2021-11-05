@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { Link } from 'react-router-dom';
+import { useHistory, Link } from 'react-router-dom';
 import * as userServices from '../services/userServices';
 import DataContext from '../context/DataContext';
 import './Login.css';
@@ -8,20 +8,23 @@ function Login() {
   const [userEmail, setUserEmail] = useState('');
   const [userPassword, setUserPassword] = useState('');
   const { setLinks } = useContext(DataContext);
+  const history = useHistory();
 
   async function submitLogin() {
     const token = await userServices.login({ userEmail, userPassword });
     if (token) {
       localStorage.setItem('token', token);
+      history.push('/minhas-tarefas');
       setLinks([
         { url: 'minhas-tarefas', name: 'Minhas Tarefas' },
+        { url: '/', name: 'Sair' },
       ]);
     }
   }
 
   return (
     <main className="login-container">
-      <section className="card">
+      <section className="login-card">
         <h3>
           Seja bem vinda(o)!
           <br />

@@ -9,7 +9,7 @@ export async function getTasksByUser(userId) {
     },
   };
   return axios.get(`${API_URL}/tasks/user/${userId}`, config).then(
-    (data) => { console.log(data); },
+    ({ data: { tasks } }) => tasks,
   ).catch(
     ({ response: { data: { err: { message } } } }) => {
       alert(message);
@@ -17,8 +17,17 @@ export async function getTasksByUser(userId) {
   );
 }
 
-export async function getById(id) {
-  return fetch(`${API_URL}climates/${id}`).then(
-    (response) => response.json(),
-  ).then((data) => data).catch((error) => error);
+export async function updateTasksByUser({ userId, tasksUpdated }) {
+  const config = {
+    headers: {
+      Authorization: localStorage.getItem('token'),
+    },
+  };
+  return axios.put(`${API_URL}/tasks/user/${userId}`, { tasks: tasksUpdated }, config).then(
+    ({ data: { tasks } }) => tasks,
+  ).catch(
+    ({ response: { data: { err: { message } } } }) => {
+      alert(message);
+    },
+  );
 }
