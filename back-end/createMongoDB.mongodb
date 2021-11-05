@@ -1,0 +1,37 @@
+const database = 'ebytr';
+const collection = 'users';
+
+use(database);
+
+db.createCollection(collection);
+
+db.users.insertMany([
+  {
+    userEmail: 'joao@teste.com',
+    userPassword: 'joaoteste',
+    userRole: 'admin',
+    userName: 'Joao',
+    tasks: [
+      {
+        taskDescription: 'Fazer x.',
+        taskStatus: 'pendente',
+      },
+      {
+        taskDescription: 'Fazer x.',
+        taskStatus: 'em andamento',
+      },
+    ],
+  },
+  {
+    userEmail: 'joana@teste.com',
+    userPassword: 'joanateste',
+    userRole: 'user',
+    userName: 'Joana',
+    tasks: [
+      {
+        taskDescription: 'Fazer y.',
+        taskStatus: 'pronto',
+      },
+    ],
+  },
+]);
