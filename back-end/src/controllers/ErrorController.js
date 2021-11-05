@@ -18,6 +18,9 @@ module.exports = (err, _req, res, _next) => {
     const error = { code: 'invalid_data', message };
     return res.status(StatusCodes.UNPROCESSABLE_ENTITY).json({ err: error });
   }
+  if (err.name) {
+    return res.status(StatusCodes.UNAUTHORIZED).json(errorsCodes.INVALID_TOKEN_ERROR);
+  }
   if (unauthorizedCodes.includes(err.code)) {
     return res.status(StatusCodes.UNAUTHORIZED).json(err);
   }

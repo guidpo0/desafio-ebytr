@@ -11,8 +11,8 @@ app.use(cors());
 
 app.use(express.json());
 
-app.use('/users', UsersRouter);
+// app.use('/users', UsersRouter);
 
-app.use('/router', TasksRouter);
+app.use('/tasks', TasksRouter);
 
 app.listen(PORT, () => { console.log(`Ouvindo a porta ${PORT}`); });

@@ -39,7 +39,7 @@ const update = async (req, res, next) => {
 
 module.exports = {
   create,
-  getAll,
-  getAllByUser,
-  update,
+  // getAll,
+  // getAllByUser,
+  // update,
 };

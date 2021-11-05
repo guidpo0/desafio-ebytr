@@ -5,17 +5,16 @@ const OPTIONS = {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 };
-let db = null;
+const collection = null;
 const { MONGO_DB_URL } = process.env;
 
 const connection = () => (
-  db
-    ? Promise.resolve(db)
+  collection
+    ? Promise.resolve(collection)
     : MongoClient.connect(MONGO_DB_URL, OPTIONS).then(
-      (conn) => {
-        db = conn.db('model_example');
-        return db;
-      },
+      (conn) => conn.db('ebytr').then(
+        (db) => db.collection('users'),
+      ),
     )
 );
 

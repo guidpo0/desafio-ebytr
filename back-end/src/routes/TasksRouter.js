@@ -9,16 +9,16 @@ const TasksRouter = express.Router();
 
 TasksRouter.post(
   '/user/:id',
-  rescue(validateJWT),
+  // rescue(validateJWT),
   rescue(validateTasksPayload),
   rescue(TasksController.create),
 );
 
-TasksRouter.get('/', rescue(validateJWT), rescue(TasksController.getAll));
+// TasksRouter.get('/', rescue(validateJWT), rescue(TasksController.getAll));
 
-TasksRouter.get('/user/:id', rescue(validateJWT), rescue(TasksController.getAllByUser));
+// TasksRouter.get('/user/:id', rescue(validateJWT), rescue(TasksController.getAllByUser));
 
-TasksRouter.put('/user/:id', rescue(validateJWT), rescue(TasksController.update));
+// TasksRouter.put('/user/:id', rescue(validateJWT), rescue(TasksController.update));
 
 TasksRouter.use(ErrorController);
 

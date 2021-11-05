@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 const UsersModel = require('../models/UsersModel');
 const { INVALID_TOKEN_ERROR } = require('../helpers/errorsCodes');
 
-const validateJWT = async (req, res, next) => {
+const validateJWT = async (req, _res, next) => {
   const token = req.headers.authorization;
   if (!token) return next(INVALID_TOKEN_ERROR);
   const secret = process.env.JWT_SECRET;
