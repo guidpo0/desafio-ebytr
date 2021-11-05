@@ -7,18 +7,16 @@ const validateTasksPayload = require('../validators/validateTasksPayload');
 
 const TasksRouter = express.Router();
 
-TasksRouter.post(
+TasksRouter.put(
   '/user/:id',
   rescue(validateJWT),
   rescue(validateTasksPayload),
-  rescue(TasksController.create),
+  rescue(TasksController.update),
 );
 
 TasksRouter.get('/', rescue(validateJWT), rescue(TasksController.getAll));
 
 TasksRouter.get('/user/:id', rescue(validateJWT), rescue(TasksController.getAllByUser));
-
-TasksRouter.put('/user/:id', rescue(validateJWT), rescue(TasksController.update));
 
 TasksRouter.use(ErrorController);
 

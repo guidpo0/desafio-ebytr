@@ -17,7 +17,6 @@ const unprocessableCodes = [
 ];
 
 module.exports = (err, _req, res, _next) => {
-  console.log(err);
   if (err.isJoi) {
     const { message } = err.details[0];
     const error = { code: 'invalid_data', message };

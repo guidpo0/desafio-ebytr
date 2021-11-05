@@ -1,37 +1,49 @@
 const { ObjectId } = require('mongodb');
 const mongoConnection = require('../connections/mongoServer');
 
-const create = async ({ tasks, userId }) => {
-  if (!ObjectId.isValid(userId)) return null;
-  const sim = await mongoConnection().updateOne(
-    { _id: ObjectId(userId) },
-    { $set: { tasks } },
-  );
-  console.log(sim);
-  return 0;
-};
-
-const getAll = async () => mongoConnection().find({}).toArray();
-
 const getAllByUser = async (id) => {
   if (!ObjectId.isValid(id)) return null;
-  const sim = await mongoConnection().findOne({ _id: ObjectId(id) });
-  console.log(sim);
-  return 0;
+  return mongoConnection().then(
+    (collection) => collection.aggregate([
+      { $match: { _id: ObjectId(id) } },
+      {
+        $project: {
+          _id: 0,
+          tasks: 1,
+        },
+      },
+    ]).toArray(),
+  ).then((result) => result[0]);
+};
+
+const getAll = async () => {
+  let tasks = [];
+  await mongoConnection().then(
+    (collection) => collection.aggregate([{
+      $project: {
+        _id: 0,
+      },
+    }]).toArray(),
+  ).then((results) => results.forEach((result) => {
+    result.tasks.forEach((task) => {
+      tasks = [...tasks, { ...task, userName: result.userName, userEmail: result.userEmail }];
+    });
+  }));
+  return tasks;
 };
 
 const update = async ({ id, tasks }) => {
   if (!ObjectId.isValid(id)) return null;
-  const sim = await mongoConnection().updateOne(
-    { _id: ObjectId(id) },
-    { $set: { tasks } },
+  await mongoConnection().then(
+    (collection) => collection.updateOne(
+      { _id: ObjectId(id) },
+      { $set: { tasks } },
+    ),
   );
-  console.log(sim);
-  return 0;
+  return getAllByUser(id);
 };
 
 module.exports = {
-  create,
   getAll,
   getAllByUser,
   update,
