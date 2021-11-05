@@ -1,6 +1,6 @@
 ### Informações Gerais
 
-Projeto desenvolvido para processo seletivo da Happmobi.
+Projeto desenvolvido para processo seletivo da Ebytr.
 
 [Aplicação](https://desafio-happmobi-frontend.herokuapp.com/)
 
@@ -8,7 +8,7 @@ Projeto desenvolvido para processo seletivo da Happmobi.
 
 # Boas vindas ao repositório de Front-End do projeto!
 
-Essa aplicação permite ao usuário fazer simulações de aluguel de carro e também ver os carros já alugados, também permite ao administrador do site editar, adiocionar e excluir carros do banco de dados.
+Essa aplicação permite ao usuário fazer anotações de tarefas e acompanhá-las alterando seus status.
 
 Lembrando que esta aplicação corresponde aos meus esforços para melhorar minhas hard skills e soft skills sinta-se à vontade para explorá-la! Feedbacks construtivos são sempre bem vindos!
 
@@ -33,10 +33,9 @@ Abaixo você poderá encontrar mais informações técnicas sobre este projeto.
 
 Nesse projeto, fui capaz de:
 
-  - Utilizar Angular para componentizar a aplicação
+  - Utilizar React para componentizar a aplicação
   - Construir uma SPA com rotas definidas
-  - Utilizar o Ngrx para gerenciamento de estado
-  - Fazer a estilização do app de modo responsivo
+  - Utilizar o Context API para gerenciamento de estado
 
 ---
 
@@ -47,8 +46,6 @@ Nesse projeto, fui capaz de:
 2. Instale as dependências e inicialize o projeto
   * Instale as dependências:
     * `npm install`
-  * Faça o build do projeto:
-    * `npm run build`
   * Inicie o projeto:
     * `npm start`
 
@@ -62,29 +59,24 @@ Para garantir a qualidade do código de forma a tê-lo mais legível, de mais f�
 
 ## API
 
-Para acessar os dados necessários foi utilizada uma API construída para este projeto. [Documentação da API](https://github.com/guidpo0/desafio-happmobi/tree/main/back-end).
+Para acessar os dados necessários foi utilizada uma API construída para este projeto. [Documentação da API](https://github.com/guidpo0/desafio-ebytr/tree/main/back-end).
 
 ## Stacks
 
-Neste projeto foi utilizado Angular, HTML, CSS e TypeScript.
+Neste projeto foi utilizado React, HTML, CSS e TypeScript.
 
 ## Rotas
 
 As rotas utilizadas na aplicação são as seguintes:
 
-* Landing Page: `/`;
-* Página de Login: `/login`;
-* Criar usuário: `/register`;
-* Tela de Perfil (deve estar logado): `/profile`;
-* Tela de Carros Disponíveis (deve estar logado): `/cars-available`;
-* Tela de alugueis (deve estar logado): `/rents`;
-* Tela de Simulação de aluguel (deve estar logado): `/simulate/{carId}`;
-* Tela do Administrador (deve estar logado como admin): `/admin`;
+* Página de Login: `/`;
+* Criar usuário: `/registro`;
+* Minhas tarefas (deve estar logado): `/minhas-tarefas`;
 
 ## Local Storage
 
 O uso de `localStorage` é necessário para realizar a validação do usuário logado.
 
-Para valor `token` é salvo no `localStorage` do navegador após o login.
+O valor `token` é salvo no `localStorage` do navegador após o login.
 
 ---
