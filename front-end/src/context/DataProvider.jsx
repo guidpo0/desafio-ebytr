@@ -1,28 +1,44 @@
+import jwtDecode from 'jwt-decode';
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import DataContext from './DataContext';
-import getClimates from '../services/getClimates';
-import getDistricts from '../services/getDistricts';
-import getDates from '../services/getDates';
+import isAuthenticated from '../auth/isAuthenticated';
+import * as tasksServices from '../services/tasksServices';
 
 function DataProvider({ children }) {
-  const [dates, setDates] = useState([{ dateId: 1, dateName: '', districtId: 1 }]);
-  const [districts, setDistricts] = useState([{ districtId: 1, districtName: '', state: '' }]);
+  const [links, setLinks] = useState([
+    { url: '', name: 'Login' },
+  ]);
+  const [userTasks, setUserTasks] = useState([
+    { taskDescription: '', taskStatus: '' },
+  ]);
   const [climates, setClimates] = useState([{
     climateId: 1, climateHour: 0, climateRain: 0, dateId: 0,
   }]);
 
   useEffect(() => {
-    getClimates.getAll().then((climatesData) => setClimates(climatesData));
-    getDistricts.getAll().then((districtsData) => setDistricts(districtsData));
-    getDates.getAll().then((datesData) => setDates(datesData));
+    if (isAuthenticated()) {
+      setLinks([
+        { url: 'minhas-tarefas', name: 'Minhas Tarefas' },
+      ]);
+    }
   }, []);
 
+  useEffect(() => {
+    if (isAuthenticated()) {
+      const token = localStorage.getItem('token');
+      const { data: { userId } } = jwtDecode(token);
+      tasksServices.getTasksByUser(userId)
+        .then((response) => {
+          setUserTasks(response.data);
+        });
+    }
+  }, [links]);
+
   const contextValue = {
-    dates,
-    setDates,
-    districts,
-    setDistricts,
+    links,
+    setLinks,
+    userTasks,
     climates,
     setClimates,
   };

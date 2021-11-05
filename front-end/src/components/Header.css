@@ -1,0 +1,23 @@
+.header-container {
+  background-color: aquamarine;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.nav-container {
+  padding: 10px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  text-align: center;
+}
+
+.nav-container a {
+  text-decoration: none;
+  color: black;
+  font-weight: 600;
+}
