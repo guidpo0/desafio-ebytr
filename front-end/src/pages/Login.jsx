@@ -45,7 +45,7 @@ function Login() {
           <button onClick={submitLogin} type="button">Login</button>
         </form>
         <h4>Ou crie uma conta</h4>
-        <Link to="/register">Criar Conta</Link>
+        <Link to="/registro">Criar Conta</Link>
       </section>
     </main>
   );

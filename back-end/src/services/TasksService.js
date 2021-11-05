@@ -8,7 +8,7 @@ const getAll = async (userRole) => {
 };
 
 const getAllByUser = async ({ id, userId, userRole }) => {
-  if (userRole !== 'admin' && userId !== id) return errorCodes.USER_NOT_ADMIN_ERROR;
+  // if (userRole !== 'admin' && userId !== id) return errorCodes.USER_NOT_ADMIN_ERROR;
   const user = await UsersModel.getById(id);
   if (!user) return errorCodes.USER_NOT_FOUND_ERROR;
   return TasksModel.getAllByUser(id);
@@ -17,7 +17,7 @@ const getAllByUser = async ({ id, userId, userRole }) => {
 const update = async ({
   id, userId, userRole, tasks,
 }) => {
-  if (userRole !== 'admin' && userId !== id) return errorCodes.USER_NOT_ADMIN_ERROR;
+  // if (userRole !== 'admin' && userId !== id) return errorCodes.USER_NOT_ADMIN_ERROR;
   const user = await UsersModel.getById(id);
   if (!user) return errorCodes.USER_NOT_FOUND_ERROR;
   return TasksModel.update({ id, tasks });

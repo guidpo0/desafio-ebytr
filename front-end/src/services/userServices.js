@@ -12,8 +12,12 @@ export async function login({ userEmail, userPassword }) {
   );
 }
 
-export async function getById(id) {
-  return fetch(`${API_URL}climates/${id}`).then(
-    (response) => response.json(),
-  ).then((data) => data).catch((error) => error);
+export async function create({ userName, userEmail, userPassword }) {
+  return axios.post(`${API_URL}/users/`, { userName, userEmail, userPassword }).then(
+    ({ data }) => data,
+  ).catch(
+    ({ response: { data: { err: { message } } } }) => {
+      alert(message);
+    },
+  );
 }
