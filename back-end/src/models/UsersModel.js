@@ -1,35 +1,108 @@
-// const mysqlServer = require('../connections/mysqlServer');
+const { ObjectId } = require('mongodb');
+const mongoConnection = require('../connections/mongoServer');
 
-// const create = async ({ dateName, districtId }) => {
-//   const [{ insertId }] = await mysqlServer.execute(
-//     'INSERT INTO heroku_5eb1b5a5878e473.Dates (date_name, district_id) VALUES (?,?)',
-//     [dateName, districtId],
-//   );
-//   return { dateId: insertId };
-// };
+const create = async ({ userEmail, userPassword, userName }) => {
+  const { insertedId } = await mongoConnection().then((collection) => collection.insertOne(
+    {
+      userEmail, userPassword, userRole: 'user', userName,
+    },
+  ));
+  return {
+    userId: insertedId,
+    userEmail,
+    userRole: 'user',
+    userName,
+  };
+};
 
-// const getAll = async () => {
-//   const [dates] = await mysqlServer.execute('SELECT * FROM heroku_5eb1b5a5878e473.Dates');
-//   return dates.map(({
-//     date_id: dateId,
-//     date_name: dateName,
-//     district_id: districtId,
-//   }) => ({ dateId, dateName, districtId }));
-// };
+const createAdmin = async ({ userEmail, userPassword, userName }) => {
+  const { insertedId } = await mongoConnection().then((collection) => collection.insertOne(
+    {
+      userEmail, userPassword, userRole: 'admin', userName,
+    },
+  ));
+  return {
+    userId: insertedId,
+    userEmail,
+    userRole: 'admin',
+    userName,
+  };
+};
 
-// const getById = async (id) => {
-//   const [dates] = await mysqlServer.execute(
-//     'SELECT * FROM heroku_5eb1b5a5878e473.Dates WHERE date_id = ?', [id],
-//   );
-//   return {
-//     dateId: dates[0].date_id,
-//     dateName: dates[0].date_name,
-//     districtId: dates[0].district_id,
-//   };
-// };
+const getByEmail = async (userEmail) => mongoConnection().then(
+  (collection) => collection.aggregate([
+    { $match: { userEmail } },
+    {
+      $project: {
+        _id: 0,
+        userId: '$_id',
+        userEmail: 1,
+        userRole: 1,
+        userPassword: 1,
+        userName: 1,
+      },
+    },
+  ]).toArray(),
+).then((result) => result[0]);
 
-// module.exports = {
-//   create,
-//   getAll,
-//   getById,
-// };
+const getAll = () => mongoConnection().then(
+  (collection) => collection.aggregate([{
+    $project: {
+      _id: 0,
+      userId: '$_id',
+      userEmail: 1,
+      userRole: 1,
+      userName: 1,
+    },
+  }]).toArray(),
+);
+
+const getById = async (id) => {
+  if (!ObjectId.isValid(id)) return null;
+  return mongoConnection().then(
+    (collection) => collection.aggregate([
+      { $match: { _id: ObjectId(id) } },
+      {
+        $project: {
+          _id: 0,
+          userId: '$_id',
+          userEmail: 1,
+          userRole: 1,
+          userName: 1,
+        },
+      },
+    ]).toArray(),
+  ).then((result) => result[0]);
+};
+
+const update = async ({
+  id, userEmail, userPassword, userName,
+}) => {
+  if (!ObjectId.isValid(id)) return null;
+  await mongoConnection().then((collection) => collection.updateOne(
+    { _id: ObjectId(id) },
+    {
+      $set: {
+        userEmail, userPassword, userName,
+      },
+    },
+  ));
+  return getById(id);
+};
+
+const remove = async (id) => {
+  if (!ObjectId.isValid(id)) return null;
+  const user = await getById(id);
+  await mongoConnection().then((collection) => collection.deleteOne({ _id: ObjectId(id) }));
+  return user;
+};
+
+module.exports = {
+  create,
+  createAdmin,
+  getByEmail,
+  getAll,
+  getById,
+  update,
+  remove,
+};

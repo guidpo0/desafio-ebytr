@@ -11,7 +11,7 @@ app.use(cors());
 
 app.use(express.json());
 
-// app.use('/users', UsersRouter);
+app.use('/users', UsersRouter);
 
 app.use('/tasks', TasksRouter);
 

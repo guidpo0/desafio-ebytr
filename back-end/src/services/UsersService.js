@@ -6,7 +6,7 @@ const errorCodes = require('../helpers/errorsCodes');
 const create = async ({ userEmail, userPassword, userName }) => {
   const users = await UsersModel.getAll();
   const existingEmail = users.some((user) => user.userEmail === userEmail);
-  if (!existingEmail) return errorCodes.INVALID_EMAIL_ERROR;
+  if (existingEmail) return errorCodes.INVALID_EMAIL_ERROR;
   return UsersModel.create({ userEmail, userPassword, userName });
 };
 
@@ -16,7 +16,7 @@ const createAdmin = async ({
   if (userRole !== 'admin') return errorCodes.USER_NOT_ADMIN_ERROR;
   const users = await UsersModel.getAll();
   const existingEmail = users.some((user) => user.userEmail === userEmail);
-  if (!existingEmail) return errorCodes.INVALI_EMAIL_ERROR;
+  if (existingEmail) return errorCodes.INVALID_EMAIL_ERROR;
   return UsersModel.createAdmin({ userEmail, userPassword, userName });
 };
 
@@ -47,6 +47,9 @@ const update = async ({
   if (userRole !== 'admin' && userId !== id) return errorCodes.USER_NOT_ADMIN_ERROR;
   const user = await UsersModel.getById(id);
   if (!user) return errorCodes.USER_NOT_FOUND_ERROR;
+  const users = await UsersModel.getAll();
+  const existingEmail = users.some((userQuery) => userQuery.userEmail === userEmail);
+  if (existingEmail) return errorCodes.INVALID_EMAIL_ERROR;
   return UsersModel.update({
     id, userEmail, userPassword, userName,
   });
