@@ -1,14 +1,12 @@
 ### Informações Gerais
 
-Projeto desenvolvido para processo seletivo da Nimbus Meteorologia.
-
-[Aplicação](https://desafio-nimbus-backend.herokuapp.com/)
+Projeto desenvolvido para processo seletivo da Ebytr.
 
 ---
 
 # Boas vindas ao repositório de Back-End projeto!
 
-Neste projeto foi desenvolvida uma API utilizando a arquitetura MSC (Model, Service, Controller) aplicando os padrões RESTful. A API trata-se de registros de previsão de chuva onde é possível criar e visualizar as informações.
+Neste projeto foi desenvolvida uma API utilizando a arquitetura MSC (Model, Service, Controller) aplicando os padrões RESTful. A API trata-se de registros de tarefas individuais onde é possível fazer operações de CRUD com elas e com usuários.
 
 Lembrando que esta aplicação corresponde aos meus esforços para melhorar minhas hard skills e soft skills, sinta-se à vontade para explorá-la! Feedbacks construtivos são sempre bem vindos!
 
@@ -23,7 +21,7 @@ Abaixo você poderá encontrar mais informações técnicas sobre este projeto.
 - [Informações do projeto](#informações-do-projeto)
   - [Linter](#linter)
   - [Banco de Dados](#banco-de-dados)
-    - [Tabelas](#tabelas)
+    - [Collections](#collections)
   - [Desenvolvimento](#desenvolvimento)
 - [Padrões e Conexões](#padrões-e-conexões)
   - [Endpoints da API](#endpoints-da-api)
@@ -36,8 +34,8 @@ Abaixo você poderá encontrar mais informações técnicas sobre este projeto.
 Nesse projeto, fui capaz de:
 
 - Trabalhar com a Arquitetura MSC (Model, Service, Controller)
-- Realizar queries em banco de dados relacional com MySQL
-- Conectar a aplicação com bancos de dados relacional
+- Realizar queries em banco de dados não relacional com MongoDB
+- Conectar a aplicação com bancos de dados não relacional
 - Aplicar os padrões RESTful;
 
 ---
@@ -50,13 +48,12 @@ Nesse projeto, fui capaz de:
   * Instale as dependências:
     * `npm install`
 
-3. Realize a conexão com seu banco de dados MySQL:
+3. Realize a conexão com seu banco de dados MongoDB:
   * Crie um arquivo `.env` na raíz do projeto e declare as seguintes variáveis:
-    `DB_HOST`: host do seu banco de dados
-    `DB_USER`: usuário do seu banco de dados
-    `DB_PASSWORD`: senha do seu banco de dados
-    `PORT`: porta em que a aplicação irá rodar (opicional, padrão 3001)
-  * Crie o banco de dados utilizando os comandos que estão no arquivo `mysqlBD.sql` na raíz do projeto.
+    `MONGO_DB_URL`: url de conexão com seu banco
+    `JWT_SECRET`: segredo que será utilizado pelo JWT
+    `PORT`: porta em que o projeto irá rodar
+  * Crie o banco de dados utilizando os comandos que estão no arquivo `createMongoDB.mongodb` na raíz do projeto.
 
 4. Inicialize o projeto
   * `npm run dev`
@@ -73,53 +70,25 @@ Você pode também instalar o plugin do `ESLint` no `VSCode`, basta ir em extens
 
 ## Banco de Dados
 
-O banco de dados utilizado é relacional e foi utilizado o MySQL.
+O banco de dados utilizado é relacional e foi utilizado o MongoDB.
 
-### Tabelas
+### Collections
 
-O banco possui três tabelas: Dates, Districts e Climates.
-
-Os campos da tabela `Dates` possuem esse formato:
+O banco possui uma collection com a seguinte estrutura:
 
 ```json
-{ "date_id": 1, "date_name": "DD/MM", "district_id": 1 }
+{ 
+  "_id": 1,
+  "userName": "name",
+  "userEmail": "name@name.com",
+  "userRole": "admin / user",
+  "userPassword": "name",
+  "tasks": [
+    "taskDescription": "description",
+    "taskStaturs": "em andamento / pendente / pronto"
+  ]
+}
 ```
-
-A resposta do insert que deve retornar após a criação é parecida com essa:
-
-```json
-{ "dateId": 1, "dateName": "DD/MM", "districtId": 1 }
-```
-
-(O dateId será gerado automaticamente)
-
-Os campos da tabela `Districts` possuem esse formato:
-
-```json
-{ "district_id": 1, "district_name": "Example" }
-```
-
-A resposta do insert que deve retornar após a criação é parecida com essa:
-
-```json
-{ "districtId": 1, "districtName": "Example" }
-```
-
-(O districtId será gerado automaticamente)
-
-Os campos da tabela `Climates` possuem esse formato:
-
-```json
-{ "climate_id": 1, "climate_hour": 0, "climate_rain": 0.0, "date_id": 1 }
-```
-
-A resposta do insert que deve retornar após a criação é parecida com essa:
-
-```json
-{ "climateIid": 1, "climateHour": 0, "climateRain": 0.0, "dateId": 1 }
-```
-
-(O climateIid será gerado automaticamente)
 
 ## Desenvolvimento
 
@@ -129,7 +98,7 @@ Neste projeto as seguintes stacks foram utilizadas no desenvolvimento:
 
 - [Express.js](https://expressjs.com/pt-br/)
 
-- [Node MySQL 2](https://www.npmjs.com/package/mysql2)
+- [Node MongoDB](https://www.npmjs.com/package/mongodb)
 
 - [Joi](https://joi.dev/api/?v=17.4.2)
 
@@ -147,22 +116,29 @@ Neste projeto as seguintes stacks foram utilizadas no desenvolvimento:
 
 ## Endpoints da API
 
-### https://desafio-nimbus-backend.herokuapp.com/dates
+### URL/users
 
 - Método GET:
 
-O retorno da API será:
+Deve ser enviado no headers da requisição o seguinte:
+
+```json
+{ "authorization": "token" }
+```
+
+Em caso de sucesso o retorno da API será:
 
 ```json
 {
-  dates: [
-    {
-      "dateId": 1,
-      "dateName": "DD/MM",
-      "districtId": 1
+  users: [
+    { 
+      "userId": 1,
+      "userName": "name",
+      "userRole": "admin / user",
+      "userEmail": "name@name.com"
     },
     ...
-  ],
+  ]
 }
 ```
 
@@ -171,163 +147,256 @@ O retorno da API será:
 O endpoint deve receber a seguinte estrutura:
 
 ```json
-{
-  "dateName": "product_name",
-  "districtId": "product_quantity"
+{ 
+  "userPassword": "name",
+  "userName": "name",
+  "userEmail": "name@name.com"
 }
 ```
 
-  - `dateName` deve ser uma _string_ com 5 caracteres;
-  - `districtId` deve ser um ID existente de um bairro cadastrado na tabela Districts.
+  - `userPassword` deve ser uma _string_ com no mínimo 6 caracteres;
+  - `userName` deve ser uma _string_;
+  - `userEmail` deve ser uma _string_ no formato de e-mail que ainda não esteja cadastrado.
 
 O retorno da API em caso de sucesso será:
 
 ```json
-{
-  "dateId": 1,
-  "dateName": "DD/MM",
-  "districtId": 1
+{ 
+  "userId": 1,
+  "userName": "name",
+  "userRole": "user",
+  "userEmail": "name@name.com"
 }
 ```
 
-### https://desafio-nimbus-backend.herokuapp.com/dates/:id
+### URL/users/:id
 
 - Método GET
+
+Deve ser enviado no headers da requisição o seguinte:
+
+```json
+{ "authorization": "token" }
+```
+
+O endpoint deve receber a seguinte estrutura:
+
+```json
+{ 
+  "userId": "dsdsds212154",
+}
+```
+
+  - `userId` deve ser uma _string_.
 
 O retorno da API em caso de sucesso será:
 
 ```json
-{
-  "dateId": 1,
-  "dateName": "DD/MM",
-  "districtId": 1
+{ 
+  "userId": 1,
+  "userName": "name",
+  "userRole": "admin / user",
+  "userEmail": "name@name.com"
 }
 ```
 
-### https://desafio-nimbus-backend.herokuapp.com/districts
+- Método PUT
 
-- Método GET
-
-O retorno da API será:
+Deve ser enviado no headers da requisição o seguinte:
 
 ```json
-{
-  districts: [
-    {
-      "districtId":5,
-      "districtName":"Copacabana",
-      "state":"RJ"
-    },
-    ...
-  ],
+{ "authorization": "token" }
+```
+
+O endpoint deve receber a seguinte estrutura:
+
+```json
+{ 
+  "userPassword": "name",
+  "userName": "name",
+  "userRole": "admin / user",
+  "userEmail": "name@name.com"
 }
 ```
+
+  - `userPassword` deve ser uma _string_ com no mínimo 6 caracteres;
+  - `userName` deve ser uma _string_;
+  - `userEmail` deve ser uma _string_ no formato de e-mail que ainda não esteja cadastrado.
+
+O retorno da API em caso de sucesso será:
+
+```json
+{ 
+  "userId": 1,
+  "userName": "name",
+  "userEmail": "name@name.com"
+}
+```
+
+- Método DELETE
+
+Deve ser enviado no headers da requisição o seguinte:
+
+```json
+{ "authorization": "token" }
+```
+
+O retorno da API em caso de sucesso será:
+
+```json
+{ 
+  "userId": 1,
+  "userName": "name",
+  "userRole": "admin / user",
+  "userEmail": "name@name.com"
+}
+```
+
+### URL/users/admin
+
+- Método POST
+
+Deve ser enviado no headers da requisição o seguinte:
+
+```json
+{ "authorization": "token" }
+```
+
+O endpoint deve receber a seguinte estrutura:
+
+```json
+{ 
+  "userPassword": "name",
+  "userName": "name",
+  "userEmail": "name@name.com"
+}
+```
+
+  - `userPassword` deve ser uma _string_ com no mínimo 6 caracteres;
+  - `userName` deve ser uma _string_;
+  - `userEmail` deve ser uma _string_ no formato de e-mail que ainda não esteja cadastrado.
+
+O retorno da API em caso de sucesso será:
+
+```json
+{ 
+  "userId": 1,
+  "userName": "name",
+  "userEmail": "name@name.com",
+  "userRole": "admin"
+}
+```
+
+### URL/users/login
 
 - Método POST
 
 O endpoint deve receber a seguinte estrutura:
 
 ```json
-[
-  {
-    "districtName":"Copacabana",
-    "state":"RJ"
-  }
-  ...
-]
+{ 
+  "userPassword": "name",
+  "userEmail": "name@name.com"
+}
 ```
 
-  - `districtName` e `state` devem ser strings.
+  - `userEmail` deve ser uma _string_ e um e-mail já cadastrado;
+  - `userPassword` deve ser uma _string_ e a senha respectiva.
 
 O retorno da API em caso de sucesso será:
 
 ```json
-{
-  {
-    "districtId":5,
-    "districtName":"Copacabana",
-    "state":"RJ"
-  }
+{ 
+  "token": "token"
 }
 ```
 
-### https://desafio-nimbus-backend.herokuapp.com/districts/:id
+### URL/tasks
 
-- Método GET
+- Método GET:
 
-O retorno da API em caso de sucesso será:
+Deve ser enviado no headers da requisição o seguinte:
 
 ```json
-{
-  "districtId":5,
-  "districtName":"Copacabana",
-  "state":"RJ"
-}
+{ "authorization": "token" }
 ```
 
-### https://desafio-nimbus-backend.herokuapp.com/climates
-
-- Método GET
-
-O retorno da API será:
+Em caso de sucesso o retorno da API será:
 
 ```json
 {
-  climates: [
-    {
-      "climateId": 5,
-      "climateHour": 0,
-      "climateRain": 0.1,
-      "dateId": 85
+  tasks: [
+    { 
+      "userName": "name",
+      "userEmail": "name@name.com",
+      "taskDescription": "description",
+      "taskStatus": "status"
     },
     ...
-  ],
+  ]
 }
 ```
 
-- Método POST
+### URL/tasks/user/:id
+
+- Método GET
+
+Deve ser enviado no headers da requisição o seguinte:
+
+```json
+{ "authorization": "token" }
+```
+
+O retorno da API em caso de sucesso será:
+
+```json
+{ 
+  "tasks": [
+    {
+      "taskDescription": "description",
+      "taskStatus": "status"
+    },
+    ...
+  ]
+}
+```
+
+- Método PUT
+
+Deve ser enviado no headers da requisição o seguinte:
+
+```json
+{ "authorization": "token" }
+```
 
 O endpoint deve receber a seguinte estrutura:
 
 ```json
-[
-  {
-    "climateHour": 0,
-    "climateRain": 0.1,
-    "dateId": 85
-  }
-  ...
-]
-```
-
-  - `climateHour` deve ser um número inteiro entre 0 e 23;
-  - `climateRain` deve ser um número maior que 0;
-  - `dateId` deve ser o ID da uma data cadastrada na tabela `Dates`.
-
-O retorno da API em caso de sucesso será:
-
-```json
-{
-  {
-    "climateId": 5,
-    "climateHour": 0,
-    "climateRain": 0.1,
-    "dateId": 85
-  }
+{ 
+  "tasks": [
+    {
+      "taskDescription": "description",
+      "taskStatus": "status"
+    },
+    ...
+  ]
 }
 ```
 
-### https://desafio-nimbus-backend.herokuapp.com/districts/:id
-
-- Método GET
+  - `taskDescription` deve ser uma _string_;
+  - `taskStatus` deve ser 'pendente', 'em andamento' ou 'pronto'.
 
 O retorno da API em caso de sucesso será:
 
 ```json
-{
-  "districtId":5,
-  "districtName":"Copacabana",
-  "state":"RJ"
+{ 
+  "tasks": [
+    {
+      "taskDescription": "description",
+      "taskStatus": "status"
+    },
+    ...
+  ]
 }
 ```
 

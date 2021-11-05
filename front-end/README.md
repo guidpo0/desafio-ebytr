@@ -2,8 +2,6 @@
 
 Projeto desenvolvido para processo seletivo da Ebytr.
 
-[Aplicação](https://desafio-happmobi-frontend.herokuapp.com/)
-
 ---
 
 # Boas vindas ao repositório de Front-End do projeto!
